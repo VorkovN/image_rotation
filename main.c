@@ -16,7 +16,7 @@ int main( int argc, char** argv ) {
 	if (argc > 2) err("Too many arguments \n" );
 
 	struct bmp_header h = { 0 };
-	struct image img = { 0 };
+	struct image img;
 	if (read_header_from_file( argv[1], &h )) {
 		bmp_header_print( &h, stdout );
 
