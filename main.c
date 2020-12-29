@@ -22,7 +22,6 @@ int main( int argc, char** argv ) {
 
 		FILE* f_in = fopen( argv[1], "rb" );
 		FILE* f_out = fopen( "../images/image2.bmp", "wb" );
-		fwrite(&h, sizeof(struct bmp_header), 1, f_out);
 
 		img.height = h.biHeight;
 		img.width = h.biWidth;
@@ -30,9 +29,14 @@ int main( int argc, char** argv ) {
 		if(from_bmp(f_in, &img) != READ_OK)
 			return 1;
 
+		h.biHeight = img.width;
+		h.biWidth = img.height;
+
+		//h.biWidth = (3 * h.biWidth + 3) & (-4);
+		//h.biHeight = (3 * h.biHeight + 3) & (-4);
 		img = rotate(img);
 
-
+		fwrite(&h, sizeof(struct bmp_header), 1, f_out);
 		if(to_bmp(f_out, &img) != WRITE_OK)
 			return 1;
 	}
