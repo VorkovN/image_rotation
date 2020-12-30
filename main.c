@@ -31,9 +31,6 @@ int main( int argc, char** argv ) {
 
 		h.biHeight = img.width;
 		h.biWidth = img.height;
-
-		//h.biWidth = (3 * h.biWidth + 3) & (-4);
-		//h.biHeight = (3 * h.biHeight + 3) & (-4);
 		img = rotate(img);
 
 		fwrite(&h, sizeof(struct bmp_header), 1, f_out);
