@@ -1,23 +1,23 @@
 #include "rotate_bmp.h"
 
-struct image rotate(struct image const source)
+struct image rotate(struct image const source, struct bmp_header *header)
 {
 	struct image source2;
-	source2.width = source.height;
-	source2.height = source.width;
-	//source2.width = source.width;
-	//source2.height = source.height;
-	uint64_t w = source.width;
-	uint64_t h = source.height;
-	uint64_t pw = (w * 3) % 4 ? 4 - (w * 3) % 4 : 0;
+
+	const uint64_t w = source.width;
+	const uint64_t h = source.height;
+	header->biHeight = w;
+	header->biWidth = h;
+	source2.height = w;
+	source2.width = h;
 
 	struct pixel buffer[h * w * 2];
-
 
 	for (uint64_t height = 0; height < h; ++height)
 		for (uint64_t width = 0; width < w; ++width)
 			buffer[(h - 1 - height) + h * width] = source.data[w * height + width];
+
 	source2.data = buffer;
-	int c = sizeof(buffer) / sizeof(uint8_t);
+
 	return source2;
 }

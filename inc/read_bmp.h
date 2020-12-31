@@ -14,7 +14,7 @@ enum read_status  {
 	READ_INVALID_HEADER
 	/* коды других ошибок  */
 };
-enum read_status from_bmp( FILE* in, struct image* img );
+enum read_status from_bmp( FILE* in, struct image* img, struct bmp_header *header);
 /*  serializer   */
 
 #endif //READ_BMP_H
