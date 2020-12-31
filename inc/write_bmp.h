@@ -12,7 +12,7 @@ enum  write_status  {
 	WRITE_ERROR
 };
 /*  serializer   */
-enum write_status to_bmp( FILE* out, struct image const* img );
+enum write_status to_bmp( FILE* out, struct image const* img, struct bmp_header *header);
 
 
 #endif //WRITE_BMP_H

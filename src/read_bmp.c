@@ -14,21 +14,21 @@ enum read_status from_bmp(FILE *in, struct image *img, struct bmp_header *header
 	}
 
 
-	const uint64_t w = header->biWidth;
-	const uint64_t h = header->biHeight;
+	const size_t w = header->biWidth;
+	const size_t h = header->biHeight;
+	const size_t padding = (w * 3) % 4 ? 4 - (w * 3) % 4 : 0;
 	img->width = w;
 	img->height = h;
-	const uint64_t pw = (w * 3) % 4 ? 4 - (w * 3) % 4 : 0;
 
 	struct pixel buffer[h * w];
 
-	uint64_t char_count = 0;
+	size_t char_count = 0;
 
 	fseek(in, header->bOffBits, SEEK_CUR);
-	for (uint64_t height = 0; height < h; ++height) {
-		for (uint64_t width = 0; width < w; ++width)
+	for (size_t height = 0; height < h; ++height) {
+		for (size_t width = 0; width < w; ++width)
 			char_count += fread(buffer + (w * height + width), sizeof(struct pixel), 1, in);
-		fseek(in, pw, SEEK_CUR);
+		fseek(in, padding, SEEK_CUR);
 	}
 
 	if (char_count != w * h)

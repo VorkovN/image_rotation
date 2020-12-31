@@ -30,27 +30,26 @@ int main(int argc, char **argv)
 
 		//открытие файлов
 		if (open_bmp(&f_in, argv[1], "rb") != OPEN_OK)
-			return 1;
+			return 0;
 		if (open_bmp(&f_out, "../images/image2.bmp", "wb") != OPEN_OK)
-			return 1;
+			return 0;
 
 		//чтение файлов и удаление паддингов
 		if (from_bmp(f_in, &img, &h) != READ_OK)
-			return 1;
+			return 0;
 
 		//переворот массива
 		img = rotate(img, &h);
 
 		//запись файлов и добавление паддингов
-		fwrite(&h, sizeof(struct bmp_header), 1, f_out);
-		if (to_bmp(f_out, &img) != WRITE_OK)
-			return 1;
+		if (to_bmp(f_out, &img, &h) != WRITE_OK)
+			return 0;
 
 		//закрытие файлов
 		if (close_bmp(&f_in) == CLOSE_ERROR)
-			return 1;
+			return 0;
 		if (close_bmp(&f_out) == CLOSE_ERROR)
-			return 1;
+			return 0;
 	}
 	else {
 		err("Failed to open BMP file or reading header.\n");
