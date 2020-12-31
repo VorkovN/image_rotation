@@ -8,7 +8,7 @@ enum read_status from_bmp(FILE *in, struct image *img)
 	struct pixel buffer[h*w];
 	//int8_t filler = 0;
 	fseek(in, sizeof(struct bmp_header), SEEK_CUR);
-	fread(buffer, sizeof(struct pixel), w * h, in);
+	//fread(buffer, sizeof(struct pixel), w * h, in);
 	for (uint64_t height = 0; height < h; ++height) {
 		for (uint64_t width = 0; width < w; ++width)
 			fread(buffer+(w * height + width), sizeof(struct pixel), 1, in);
