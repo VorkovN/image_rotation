@@ -24,23 +24,33 @@ int main(int argc, char **argv)
 	if (read_header_from_file(argv[1], &h)) {
 		bmp_header_print(&h, stdout);
 
+		//создание объектов класса файл
 		FILE *f_in = NULL;
 		FILE *f_out = NULL;
 
-		open_bmp(&f_in, argv[1], "rb");
-		open_bmp(&f_out, "../images/image2.bmp", "wb");
+		//открытие файлов
+		if (open_bmp(&f_in, argv[1], "rb") != OPEN_OK)
+			return 1;
+		if (open_bmp(&f_out, "../images/image2.bmp", "wb") != OPEN_OK)
+			return 1;
 
+		//чтение файлов и удаление паддингов
 		if (from_bmp(f_in, &img, &h) != READ_OK)
 			return 1;
 
+		//переворот массива
 		img = rotate(img, &h);
 
+		//запись файлов и добавление паддингов
 		fwrite(&h, sizeof(struct bmp_header), 1, f_out);
 		if (to_bmp(f_out, &img) != WRITE_OK)
 			return 1;
 
-		close_bmp(&f_in);
-		close_bmp(&f_out);
+		//закрытие файлов
+		if (close_bmp(&f_in) == CLOSE_ERROR)
+			return 1;
+		if (close_bmp(&f_out) == CLOSE_ERROR)
+			return 1;
 	}
 	else {
 		err("Failed to open BMP file or reading header.\n");

@@ -9,12 +9,10 @@
 
 enum read_status  {
 	READ_OK = 0,
-	READ_INVALID_SIGNATURE,
+	READ_INVALID_OBJECTS_COUNT,
 	READ_INVALID_BITS,
 	READ_INVALID_HEADER
-	/* коды других ошибок  */
 };
 enum read_status from_bmp( FILE* in, struct image* img, struct bmp_header *header);
-/*  serializer   */
 
 #endif //READ_BMP_H
