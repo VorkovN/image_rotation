@@ -10,3 +10,8 @@ _Noreturn void err( const char* msg, ... ) {
   exit(1);
 }
 
+const size_t find_padding(const size_t w, const size_t h)
+{
+	return (w * 3) % 4 ? 4 - (w * 3) % 4 : 0;
+}
+

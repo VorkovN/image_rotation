@@ -3,24 +3,18 @@
 enum read_status from_bmp(FILE *in, struct image *img, struct bmp_header *header)
 {
 	if(header->bOffBits != sizeof(struct bmp_header))
-	{
-		printf("Invalid size of header");
 		return READ_INVALID_HEADER;
-	}
 
-	if(header->biBitCount != 24){
-		printf("Invalid count of bits for one pixel");
+
+	if(header->biBitCount != 24)
 		return READ_INVALID_BITS;
-	}
 
 
 	const size_t w = header->biWidth;
 	const size_t h = header->biHeight;
-	const size_t padding = (w * 3) % 4 ? 4 - (w * 3) % 4 : 0;
-	img->width = w;
-	img->height = h;
+	const size_t padding = find_padding(w, h);
 
-	struct pixel buffer[h * w];
+	struct pixel* buffer = malloc(sizeof (struct pixel)*h*w);
 
 	size_t char_count = 0;
 
@@ -32,10 +26,7 @@ enum read_status from_bmp(FILE *in, struct image *img, struct bmp_header *header
 	}
 
 	if (char_count != w * h)
-	{
-		printf("More read objects were expected");
 		return READ_INVALID_OBJECTS_COUNT;
-	}
 
 	img->data = buffer;
 	return READ_OK;

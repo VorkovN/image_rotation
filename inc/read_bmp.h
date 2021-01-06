@@ -6,6 +6,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include "bmp.h"
+#include "util.h"
 
 enum read_status  {
 	READ_OK = 0,

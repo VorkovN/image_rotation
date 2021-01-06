@@ -5,7 +5,7 @@
 #include "read_bmp.h"
 #include "rotate_bmp.h"
 #include "write_bmp.h"
-#include "file_handler.h"
+#include "working_with_files.h"
 
 
 void usage()
@@ -20,40 +20,51 @@ int main(int argc, char **argv)
 	if (argc > 2) err("Too many arguments \n");
 
 	struct bmp_header h = {0};
-	struct image img;
 	if (read_header_from_file(argv[1], &h)) {
 		bmp_header_print(&h, stdout);
 
-		//создание объектов класса файл
-		FILE *f_in = NULL;
-		FILE *f_out = NULL;
 
-		//открытие файлов
-		if (open_bmp(&f_in, argv[1], "rb") != OPEN_OK)
-			return 0;
-		if (open_bmp(&f_out, "../images/image2.bmp", "wb") != OPEN_OK)
-			return 0;
-
-		//чтение файлов и удаление паддингов
-		if (from_bmp(f_in, &img, &h) != READ_OK)
-			return 0;
-
-		//переворот массива
-		img = rotate(img, &h);
-
-		//запись файлов и добавление паддингов
-		if (to_bmp(f_out, &img, &h) != WRITE_OK)
-			return 0;
-
-		//закрытие файлов
-		if (close_bmp(&f_in) == CLOSE_ERROR)
-			return 0;
-		if (close_bmp(&f_out) == CLOSE_ERROR)
-			return 0;
 	}
 	else {
 		err("Failed to open BMP file or reading header.\n");
 	}
+
+	struct image img = {h.biWidth, h.biHeight};
+
+	//создание объектов класса файл
+	FILE *f_in = NULL;
+	FILE *f_out = NULL;
+
+	//открытие файлов
+	if (open_bmp(&f_in, argv[1], "rb") != OPEN_OK)
+		err("open error\n");
+	if (open_bmp(&f_out, "../images/image2.bmp", "wb") != OPEN_OK)
+		err("open error\n");
+
+	//чтение файлов и удаление паддингов
+	switch (from_bmp(f_in, &img, &h)) {
+	case READ_OK:
+		break;
+	case READ_INVALID_OBJECTS_COUNT:
+		err("More read objects were expected");
+	case READ_INVALID_BITS:
+		err("Invalid count of bits for one pixel");
+	case READ_INVALID_HEADER:
+		err("Invalid size of header");
+	}
+
+	//переворот массива
+	img = rotate(img);
+
+	//запись файлов и добавление паддингов
+	if (to_bmp(f_out, &img) != WRITE_OK)//
+		err("More pixels were expected");
+
+	//закрытие файлов
+	if (close_bmp(&f_in) == CLOSE_ERROR)
+		err("close error\n");
+	if (close_bmp(&f_out) == CLOSE_ERROR)
+		err("close error\n");
 
 	return 0;
 }

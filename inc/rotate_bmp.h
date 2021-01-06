@@ -8,6 +8,6 @@
 #include "bmp.h"
 
 /* создаёт копию изображения, которая повёрнута на 90 градусов */
-struct image rotate( struct image const source, struct bmp_header *h);
+struct image rotate( struct image const source);
 
 #endif //ROTATE_BMP_H
