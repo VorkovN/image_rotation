@@ -15,8 +15,6 @@ struct image rotate(struct image const source)
 		for (size_t width = 0; width < w; ++width)
 			buffer[(h - 1 - height) + h * width] = source.data[w * height + width];
 
-	free(source.data);
-
 	source2.data = buffer;
 
 	return source2;

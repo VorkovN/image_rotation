@@ -5,7 +5,7 @@
 #include "read_bmp.h"
 #include "rotate_bmp.h"
 #include "write_bmp.h"
-#include "working_with_files.h"
+#include "file_io.h"
 
 
 void usage()
@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 	}
 
 	struct image img = {h.biWidth, h.biHeight};
+	struct image rotated_img = {h.biHeight, h.biWidth};
 
 	//создание объектов класса файл
 	FILE *f_in = NULL;
@@ -54,10 +55,10 @@ int main(int argc, char **argv)
 	}
 
 	//переворот массива
-	img = rotate(img);
+	rotated_img = rotate(img);
 
 	//запись файлов и добавление паддингов
-	if (to_bmp(f_out, &img) != WRITE_OK)//
+	if (to_bmp(f_out, &rotated_img) != WRITE_OK)//
 		err("More pixels were expected");
 
 	//закрытие файлов
@@ -66,5 +67,7 @@ int main(int argc, char **argv)
 	if (close_bmp(&f_out) == CLOSE_ERROR)
 		err("close error\n");
 
+	free(img.data);
+	free(rotated_img.data);
 	return 0;
 }
